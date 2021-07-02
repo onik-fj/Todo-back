@@ -6,7 +6,7 @@ class UserController{
     const newPersone = await db.query('INSERT INTO clients (name, surname, credit) values ($1, $2, $3) RETURNING *', [name, surname, credit]);
     res.json(newPersone.rows[0]);
   }
-  async getUser(req,res){
+  async getUsers(req,res){
     const users = await db.query('SELECT * FROM clients');
     res.json(users.rows);
   }
@@ -17,12 +17,8 @@ class UserController{
   }
   async deleteUser(req,res){
     const id = req.params.id;
-    const user = await db.query('DELETE FROM clients where id = $1', [id]);
+    const user = await db.query('DELETE FROM clients where id = $1 RETURNING *', [id]);
     res.json(user.rows[0]);
-  }
-  async getLastUser(req,res){
-    const idUser= await db.query('SELECT MAX(id) FROM clients');
-    res.json(idUser.rows);
   }
 }
 module.exports = new UserController();
